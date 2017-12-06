@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/HenrikFricke/go-postgres-example/api"
+	"net/http"
+
 	"github.com/HenrikFricke/go-postgres-example/repository"
-	"github.com/gin-gonic/gin"
+	"github.com/HenrikFricke/go-postgres-example/routes"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -28,12 +29,7 @@ func initDb() *gorm.DB {
 func main() {
 	db := initDb()
 	repository := repository.Repository{db}
-	api := api.API{&repository}
+	handler := routes.New(&repository)
 
-	r := gin.Default()
-	v1 := r.Group("api/v1")
-
-	v1.GET("/users/:id", api.GetUser)
-
-	r.Run(":8080")
+	http.ListenAndServe(":8080", handler)
 }
