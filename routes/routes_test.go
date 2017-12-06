@@ -51,6 +51,8 @@ func TestGetUserSuccessfulRequest(t *testing.T) {
 	if res.Code != 200 {
 		t.Errorf("GetUser handler does not return status code 200, was %s.", strconv.Itoa(res.Code))
 	}
+
+	mockRepository.AssertCalled(t, "GetUser", 1)
 }
 
 func TestGetUserUserDoesNotExist(t *testing.T) {
@@ -63,4 +65,20 @@ func TestGetUserUserDoesNotExist(t *testing.T) {
 	if res.Code != 400 {
 		t.Errorf("GetUser handler does not return status code 404, was %s.", strconv.Itoa(res.Code))
 	}
+
+	mockRepository.AssertCalled(t, "GetUser", 2)
+}
+
+func TestGetUsers(t *testing.T) {
+	Before()
+	mockRepository.On("GetUsers").Return([]repository.Users{repository.Users{}, repository.Users{}})
+
+	req, _ := http.NewRequest("GET", "/users", nil)
+	handler.ServeHTTP(res, req)
+
+	if res.Code != 200 {
+		t.Errorf("GetUsers handler does not return status code 200, was %s.", strconv.Itoa(res.Code))
+	}
+
+	mockRepository.AssertCalled(t, "GetUsers")
 }

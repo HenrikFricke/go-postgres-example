@@ -18,7 +18,7 @@ type errorResponse struct {
 	Error string `json:"error"`
 }
 
-// GetUser handles request to get all users
+// GetUser returns a specific user
 func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
@@ -32,4 +32,12 @@ func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
+}
+
+// GetUsers returns a list of user
+func (h Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
+	users := h.Repository.GetUsers()
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(users)
 }
