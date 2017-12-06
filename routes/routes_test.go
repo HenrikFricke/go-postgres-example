@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -81,4 +83,20 @@ func TestGetUsers(t *testing.T) {
 	}
 
 	mockRepository.AssertCalled(t, "GetUsers")
+}
+
+func TestCreateUser(t *testing.T) {
+	Before()
+	user := repository.Users{}
+	mockRepository.On("CreateUser").Return()
+
+	body, _ := json.Marshal(user)
+	req, _ := http.NewRequest("POST", "/users", bytes.NewReader(body))
+	handler.ServeHTTP(res, req)
+
+	if res.Code != 200 {
+		t.Errorf("CreateUser handler does not return status code 200, was %s.", strconv.Itoa(res.Code))
+	}
+
+	mockRepository.AssertCalled(t, "CreateUser")
 }

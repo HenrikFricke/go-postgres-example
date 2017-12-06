@@ -18,6 +18,10 @@ type errorResponse struct {
 	Error string `json:"error"`
 }
 
+type messageResponse struct {
+	Message string `json:"message"`
+}
+
 // GetUser returns a specific user
 func (h Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -40,4 +44,22 @@ func (h Handler) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(users)
+}
+
+// CreateUser creates a new user
+func (h Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+
+	var user repository.Users
+	err := decoder.Decode(&user)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(errorResponse{err.Error()})
+		return
+	}
+
+	h.Repository.CreateUser(user)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(messageResponse{"User has been created."})
 }
