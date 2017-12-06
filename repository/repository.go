@@ -6,6 +6,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// Interface describes the repository
+type Interface interface {
+	CreateUser(user Users)
+	GetUser(id int) (user Users, err error)
+	GetUsers() []Users
+}
+
 // Repository handles the communication with the database
 type Repository struct {
 	Db *gorm.DB
