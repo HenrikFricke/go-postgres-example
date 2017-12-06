@@ -19,9 +19,9 @@ func New(repository repository.Interface) http.Handler {
 	h := Handler{repository}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/users", addDefaultHeaders(h.GetUsers)).Methods("GET")
-	r.HandleFunc("/users", addDefaultHeaders(h.CreateUser)).Methods("POST")
-	r.HandleFunc("/users/{id:[0-9]+}", addDefaultHeaders(h.GetUser)).Methods("GET")
+	r.HandleFunc("/v1/users", addDefaultHeaders(h.GetUsers)).Methods("GET")
+	r.HandleFunc("/v1/users", addDefaultHeaders(h.CreateUser)).Methods("POST")
+	r.HandleFunc("/v1/users/{id:[0-9]+}", addDefaultHeaders(h.GetUser)).Methods("GET")
 
 	return r
 }

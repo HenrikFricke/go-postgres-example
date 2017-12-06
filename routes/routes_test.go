@@ -47,7 +47,7 @@ func TestGetUserSuccessfulRequest(t *testing.T) {
 	Before()
 	mockRepository.On("GetUser", 1).Return(repository.Users{}, nil)
 
-	req, _ := http.NewRequest("GET", "/users/1", nil)
+	req, _ := http.NewRequest("GET", "/v1/users/1", nil)
 	handler.ServeHTTP(res, req)
 
 	if res.Code != 200 {
@@ -61,7 +61,7 @@ func TestGetUserUserDoesNotExist(t *testing.T) {
 	Before()
 	mockRepository.On("GetUser", 2).Return(repository.Users{}, errors.New("Error"))
 
-	req, _ := http.NewRequest("GET", "/users/2", nil)
+	req, _ := http.NewRequest("GET", "/v1/users/2", nil)
 	handler.ServeHTTP(res, req)
 
 	if res.Code != 400 {
@@ -75,7 +75,7 @@ func TestGetUsers(t *testing.T) {
 	Before()
 	mockRepository.On("GetUsers").Return([]repository.Users{repository.Users{}, repository.Users{}})
 
-	req, _ := http.NewRequest("GET", "/users", nil)
+	req, _ := http.NewRequest("GET", "/v1/users", nil)
 	handler.ServeHTTP(res, req)
 
 	if res.Code != 200 {
@@ -91,7 +91,7 @@ func TestCreateUser(t *testing.T) {
 	mockRepository.On("CreateUser").Return()
 
 	body, _ := json.Marshal(user)
-	req, _ := http.NewRequest("POST", "/users", bytes.NewReader(body))
+	req, _ := http.NewRequest("POST", "/v1/users", bytes.NewReader(body))
 	handler.ServeHTTP(res, req)
 
 	if res.Code != 200 {
